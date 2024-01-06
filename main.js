@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as dat from "dat.gui";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js'
 
 
 console.log(OrbitControls);
@@ -42,7 +42,9 @@ function generatePlane(){
     array[i + 2] = z + Math.random();
   }
 }
-
+//6th
+const raycaster=new THREE.Raycaster;
+console.log(raycaster);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -86,10 +88,16 @@ for (let i = 0; i < array.length; i += 3) {
 const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(0, 0, 1);
 scene.add(light);
+//4th 
+const Backlight = new THREE.DirectionalLight(0xffffff, 1);
+Backlight.position.set(0, 0, -1);
+scene.add(Backlight);  
 
-// const Backlight = new THREE.DirectionalLight(0xffffff, 1);
-// light.position.set(0, 0, -1);
-// scene.add(Backlight);
+//5th
+const mouse = {
+  x:undefined,
+  y:undefined
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -99,6 +107,24 @@ function animate() {
   //planeMesh.rotation.x+=0.01;
 
   renderer.render(scene, camera);
+  raycaster.setFromCamera(mouse,camera)
+  const intersects=raycaster.intersectObjects([planeMesh])
+  console.log(intersects)
+  if (intersects.length > 0) {
+    // Intersection detected, do something with the intersected object(s)
+    console.log('Intersection detected:', intersects);
+} else {
+    // No intersections
+    console.log('No intersections detected');
 }
-renderer.render(scene, camera);
+}
+//renderer.render(scene, camera);
 animate();
+
+
+addEventListener('mousemove',(event)=>{
+ mouse.x = (event.clientX/innerWidth)*2-1
+ mouse.y = -(event.clientY/innerHeight)*2+1
+
+ //console.log(mouse)
+})
